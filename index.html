@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Name — Product, Strategy & Everything In Between</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface-elevated: #1a1a1a;
+    --text-primary: #f0ede6;
+    --text-secondary: #8a8780;
+    --text-muted: #5a5855;
+    --accent: #e8c547;
+    --accent-dim: rgba(232, 197, 71, 0.12);
+    --accent-glow: rgba(232, 197, 71, 0.06);
+    --border: #222220;
+    --border-light: #2a2a28;
+    --red: #c75a5a;
+    --green: #5ac77a;
+    --blue: #5a8ec7;
+    --purple: #9a6ec7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Instrument Serif', serif; font-size: 1.4rem;
+    color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    color: var(--text-secondary); text-decoration: none; font-size: 0.82rem;
+    letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 3rem 4rem; position: relative;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: 0; right: 0; width: 60%; height: 100%;
+    background: radial-gradient(ellipse at 80% 30%, var(--accent-glow) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif; font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 1.05; letter-spacing: -0.03em; color: var(--text-primary);
+    max-width: 900px; opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-description {
+    font-size: 1.15rem; color: var(--text-secondary); max-width: 580px;
+    margin-top: 2rem; line-height: 1.7; font-weight: 300;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+  .hero-tags {
+    display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2.5rem;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+  .hero-tag {
+    padding: 0.4rem 1rem; border: 1px solid var(--border-light); border-radius: 100px;
+    font-size: 0.78rem; color: var(--text-secondary); font-weight: 400;
+    letter-spacing: 0.02em; transition: all 0.3s;
+  }
+  .hero-tag:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+  .scroll-indicator {
+    position: absolute; bottom: 3rem; left: 3rem;
+    display: flex; align-items: center; gap: 0.8rem;
+    color: var(--text-muted); font-size: 0.75rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1s;
+  }
+  .scroll-line { width: 40px; height: 1px; background: var(--text-muted); animation: pulse 2s ease infinite; }
+
+  /* ── Section base ── */
+  section { padding: 6rem 3rem; border-top: 1px solid var(--border); }
+  .section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3.5rem; }
+  .section-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent); letter-spacing: 0.1em; }
+  .section-title { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: -0.02em; }
+  .section-subtitle { color: var(--text-muted); font-size: 0.85rem; font-weight: 400; }
+
+  /* ── Playground / Physics ── */
+  .playground-wrapper {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #060608;
+  }
+  .playground-canvas { display: block; width: 100%; height: 520px; cursor: crosshair; }
+  .playground-hud {
+    position: absolute; top: 1.2rem; left: 1.5rem; right: 1.5rem;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    pointer-events: none;
+  }
+  .playground-hud-left { display: flex; flex-direction: column; gap: 0.3rem; }
+  .playground-hud-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); opacity: 0.8;
+  }
+  .playground-hud-stat {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted);
+  }
+  .playground-controls { display: flex; gap: 0.5rem; pointer-events: all; }
+  .playground-btn {
+    padding: 0.4rem 1rem; border: 1px solid var(--border-light);
+    border-radius: 100px; background: rgba(10,10,10,0.7);
+    backdrop-filter: blur(10px);
+    color: var(--text-secondary); font-size: 0.72rem;
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+    transition: all 0.3s; letter-spacing: 0.02em;
+  }
+  .playground-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .playground-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+  .playground-mass-indicator {
+    position: absolute; bottom: 3.2rem; left: 1.5rem;
+    pointer-events: none;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .mass-bar-bg {
+    width: 120px; height: 3px; background: var(--border-light); border-radius: 2px; overflow: hidden;
+  }
+  .mass-bar-fill {
+    height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.15s;
+  }
+  .mass-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
+    color: var(--text-muted); letter-spacing: 0.05em;
+  }
+  .playground-instruction {
+    position: absolute; bottom: 1.2rem; left: 0; right: 0;
+    text-align: center; pointer-events: none;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+    color: var(--text-muted); opacity: 0.6; letter-spacing: 0.04em;
+  }
+
+  /* ── Projects ── */
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.5rem; }
+  .project-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 2rem; transition: all 0.4s ease; position: relative; overflow: hidden;
+    text-decoration: none; color: inherit; display: block;
+  }
+  .project-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent); opacity: 0; transition: opacity 0.4s;
+  }
+  .project-card:hover { border-color: var(--border-light); transform: translateY(-4px); background: var(--surface-elevated); }
+  .project-card:hover::before { opacity: 1; }
+  .project-type {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem;
+  }
+  .project-card h3 { font-family: 'Instrument Serif', serif; font-size: 1.5rem; letter-spacing: -0.01em; margin-bottom: 0.8rem; line-height: 1.25; }
+  .project-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.65; font-weight: 300; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .project-tags span {
+    font-size: 0.7rem; padding: 0.25rem 0.7rem; border-radius: 100px;
+    background: var(--accent-dim); color: var(--accent);
+    font-family: 'JetBrains Mono', monospace; letter-spacing: 0.03em;
+  }
+  .project-status { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.2rem; font-size: 0.75rem; color: var(--text-muted); }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  .status-dot.wip { background: var(--accent); }
+  .status-dot.planned { background: var(--text-muted); }
+
+  /* ── Articles ── */
+  .articles-list { display: flex; flex-direction: column; }
+  .article-item {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 2rem; align-items: baseline;
+    padding: 1.5rem 0; border-bottom: 1px solid var(--border);
+    text-decoration: none; color: inherit; transition: all 0.3s;
+  }
+  .article-item:hover { padding-left: 1rem; }
+  .article-item:hover .article-title { color: var(--accent); }
+  .article-category {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); min-width: 100px;
+  }
+  .article-title { font-family: 'Instrument Serif', serif; font-size: 1.25rem; transition: color 0.3s; letter-spacing: -0.01em; }
+  .article-date { font-size: 0.8rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+  /* ── Interests ── */
+  .interests-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1px; background: var(--border); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+  .interest-cell { background: var(--surface); padding: 2rem; transition: all 0.3s; }
+  .interest-cell:hover { background: var(--surface-elevated); }
+  .interest-cell:hover .interest-icon { transform: scale(1.2); }
+  .interest-icon { font-size: 1.8rem; margin-bottom: 1rem; display: block; transition: transform 0.3s; }
+  .interest-cell h4 { font-family: 'Instrument Serif', serif; font-size: 1.15rem; margin-bottom: 0.4rem; }
+  .interest-cell p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; font-weight: 300; }
+
+  /* ── About ── */
+  .about-content { display: grid; grid-template-columns: 2fr 1fr; gap: 4rem; }
+  .about-text { font-size: 1.1rem; color: var(--text-secondary); line-height: 1.8; font-weight: 300; }
+  .about-text strong { color: var(--text-primary); font-weight: 500; }
+  .about-details { display: flex; flex-direction: column; gap: 1.5rem; }
+  .about-detail-item { border-left: 1px solid var(--border-light); padding-left: 1rem; }
+  .about-detail-item label {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); display: block; margin-bottom: 0.3rem;
+  }
+  .about-detail-item span { font-size: 0.95rem; color: var(--text-primary); }
+
+  /* ── Contact ── */
+  .contact { text-align: center; padding: 8rem 3rem; }
+  .contact h2 { font-family: 'Instrument Serif', serif; font-size: clamp(2.5rem, 5vw, 4rem); letter-spacing: -0.03em; margin-bottom: 1rem; }
+  .contact h2 em { font-style: italic; color: var(--accent); }
+  .contact p { color: var(--text-secondary); font-size: 1rem; margin-bottom: 2.5rem; font-weight: 300; }
+  .contact-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+  .contact-link {
+    padding: 0.8rem 2rem; border: 1px solid var(--border-light); border-radius: 100px;
+    color: var(--text-primary); text-decoration: none; font-size: 0.85rem;
+    font-weight: 500; transition: all 0.3s; letter-spacing: 0.02em;
+  }
+  .contact-link:hover { border-color: var(--accent); background: var(--accent); color: var(--bg); }
+
+  footer {
+    padding: 2rem 3rem; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted);
+  }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+  .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a { font-size: 0.7rem; }
+    .hero { padding: 7rem 1.5rem 3rem; }
+    section { padding: 4rem 1.5rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .article-item { grid-template-columns: 1fr; gap: 0.3rem; }
+    .article-category { min-width: unset; }
+    .about-content { grid-template-columns: 1fr; gap: 2rem; }
+    .interests-grid { grid-template-columns: repeat(2, 1fr); }
+    .section-header { flex-direction: column; gap: 0.3rem; }
+    .contact { padding: 5rem 1.5rem; }
+    footer { flex-direction: column; gap: 0.5rem; }
+    .playground-canvas { height: 380px; }
+    .playground-controls { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <a href="#" class="nav-logo">your<span>.</span>name</a>
+  <div class="nav-links">
+    <a href="#playground">Playground</a>
+    <a href="#projects">Projects</a>
+    <a href="#articles">Articles</a>
+    <a href="#world">World</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-label">Product Manager · Builder · Thinker</div>
+  <h1>I build products at the intersection of <em>everything.</em></h1>
+  <p class="hero-description">
+    Product management, AI, finance, music, strategy games, and sports — I believe the best PMs are the ones who connect dots others don't even see. This is my portfolio of projects, ideas, and explorations.
+  </p>
+  <div class="hero-tags">
+    <span class="hero-tag">Product Management</span>
+    <span class="hero-tag">AI & Machine Learning</span>
+    <span class="hero-tag">Trading & Finance</span>
+    <span class="hero-tag">Chess & Poker</span>
+    <span class="hero-tag">Music & Piano</span>
+    <span class="hero-tag">Basketball</span>
+    <span class="hero-tag">Math & CS</span>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    Scroll to explore
+  </div>
+</section>
+
+<!-- ── Playground / Gravity Sim ── -->
+<section id="playground">
+  <div class="section-header">
+    <div>
+      <div class="section-number">00</div>
+      <h2 class="section-title">Playground</h2>
+    </div>
+    <span class="section-subtitle">Click to create. Drag to launch. Watch gravity do the rest.</span>
+  </div>
+
+  <div class="playground-wrapper fade-in">
+    <canvas class="playground-canvas" id="gravityCanvas"></canvas>
+    <div class="playground-hud">
+      <div class="playground-hud-left">
+        <span class="playground-hud-label">N-Body Gravity Simulator</span>
+        <span class="playground-hud-stat" id="bodyCount">Bodies: 0</span>
+        <span class="playground-hud-stat" id="energyStat">Energy: 0</span>
+      </div>
+      <div class="playground-controls">
+        <button class="playground-btn active" id="btnTrails" onclick="toggleTrails()">Trails</button>
+        <button class="playground-btn" id="btnGlow" onclick="toggleGlow()">Glow</button>
+        <button class="playground-btn" id="btnPreset" onclick="loadPreset()">Orbit Preset</button>
+        <button class="playground-btn" id="btnClear" onclick="clearBodies()">Clear</button>
+      </div>
+    </div>
+    <div class="playground-mass-indicator">
+      <div class="mass-bar-bg"><div class="mass-bar-fill" id="massBar" style="width:6.5%"></div></div>
+      <span class="mass-label" id="massLabel">Mass: 800</span>
+    </div>
+    <div class="playground-instruction">Click to spawn · Drag to launch with velocity · Scroll to change mass</div>
+  </div>
+</section>
+
+<!-- ── Projects ── -->
+<section id="projects">
+  <div class="section-header">
+    <div>
+      <div class="section-number">01</div>
+      <h2 class="section-title">Projects</h2>
+    </div>
+    <span class="section-subtitle">Product thinking, made tangible</span>
+  </div>
+  <div class="projects-grid">
+    <a href="#" class="project-card fade-in">
+      <div class="project-type">AI · Product Spec</div>
+      <h3>AI-Powered Music Tutor — Full PRD</h3>
+      <p>End-to-end product requirements document for an AI piano tutor. Includes user personas, user stories, wireframes, success metrics, and a prioritized roadmap.</p>
+      <div class="project-tags"><span>PRD</span><span>AI/ML</span><span>Music</span><span>0→1</span></div>
+      <div class="project-status"><span class="status-dot wip"></span> In Progress</div>
+    </a>
+    <a href="#" class="project-card fade-in">
+      <div class="project-type">AI Agent · Technical</div>
+      <h3>PM Copilot — AI Agent from Scratch</h3>
+      <p>An AI agent that helps write PRDs by asking clarifying questions and generating structured product specs. Built to learn agent architecture from the ground up.</p>
+      <div class="project-tags"><span>Python</span><span>LangChain</span><span>Agents</span><span>LLM</span></div>
+      <div class="project-status"><span class="status-dot planned"></span> Planned</div>
+    </a>
+    <a href="#" class="project-card fade-in">
+      <div class="project-type">Finance · Data</div>
+      <h3>Portfolio Risk Analyzer</h3>
+      <p>Tool that takes stock tickers and shows risk metrics, correlations, and basic recommendations. Framed as a product with a PRD, MVP definition, and v2 roadmap.</p>
+      <div class="project-tags"><span>Python</span><span>Finance</span><span>Data Viz</span></div>
+      <div class="project-status"><span class="status-dot planned"></span> Planned</div>
+    </a>
+    <a href="#" class="project-card fade-in">
+      <div class="project-type">Product Teardown</div>
+      <h3>Zerodha / Robinhood — UX Teardown</h3>
+      <p>Deep analysis of onboarding flow, friction points, and proposed improvements with mockups. Written as a PM case study with metrics to track.</p>
+      <div class="project-tags"><span>Case Study</span><span>UX</span><span>Fintech</span></div>
+      <div class="project-status"><span class="status-dot planned"></span> Planned</div>
+    </a>
+    <a href="#" class="project-card fade-in">
+      <div class="project-type">Analytics · Sports</div>
+      <h3>NBA Player Comparison Tool</h3>
+      <p>Interactive tool pulling stats from public APIs with the PM angle — documenting design decisions, user research approach, and success metrics.</p>
+      <div class="project-tags"><span>API</span><span>Basketball</span><span>Interactive</span></div>
+      <div class="project-status"><span class="status-dot planned"></span> Planned</div>
+    </a>
+    <a href="#" class="project-card fade-in">
+      <div class="project-type">Strategy · Framework</div>
+      <h3>AI Writing Tools — Competitive Analysis</h3>
+      <p>Competitive landscape of 8 AI writing tools. Positioning maps, pricing analysis, feature gap identification, and strategic recommendations.</p>
+      <div class="project-tags"><span>Strategy</span><span>Market Analysis</span><span>AI</span></div>
+      <div class="project-status"><span class="status-dot planned"></span> Planned</div>
+    </a>
+  </div>
+</section>
+
+<!-- ── Articles ── -->
+<section id="articles">
+  <div class="section-header">
+    <div>
+      <div class="section-number">02</div>
+      <h2 class="section-title">Articles</h2>
+    </div>
+    <span class="section-subtitle">Ideas at the intersections</span>
+  </div>
+  <div class="articles-list">
+    <a href="#" class="article-item fade-in">
+      <span class="article-category">Poker × PM</span>
+      <span class="article-title">Expected Value Thinking — How Poker Math Makes You a Better PM</span>
+      <span class="article-date">Coming Soon</span>
+    </a>
+    <a href="#" class="article-item fade-in">
+      <span class="article-category">Chess × Strategy</span>
+      <span class="article-title">Sacrificing a Feature to Win the Game — When to Kill Your Darlings</span>
+      <span class="article-date">Coming Soon</span>
+    </a>
+    <a href="#" class="article-item fade-in">
+      <span class="article-category">Basketball × PM</span>
+      <span class="article-title">What NBA Team-Building Teaches Us About Product Team Composition</span>
+      <span class="article-date">Coming Soon</span>
+    </a>
+    <a href="#" class="article-item fade-in">
+      <span class="article-category">AI × Product</span>
+      <span class="article-title">I Built an AI Agent from Scratch — Here's What I Learned</span>
+      <span class="article-date">Coming Soon</span>
+    </a>
+    <a href="#" class="article-item fade-in">
+      <span class="article-category">Trading × PM</span>
+      <span class="article-title">From Trading Floors to Product Roadmaps — Decision-Making Under Uncertainty</span>
+      <span class="article-date">Coming Soon</span>
+    </a>
+    <a href="#" class="article-item fade-in">
+      <span class="article-category">Tech × PM</span>
+      <span class="article-title">How Databases Work — For PMs Who Want to Talk to Engineers</span>
+      <span class="article-date">Coming Soon</span>
+    </a>
+    <a href="#" class="article-item fade-in">
+      <span class="article-category">Math × ML</span>
+      <span class="article-title">The Math Behind A/B Testing — What Every PM Should Know</span>
+      <span class="article-date">Coming Soon</span>
+    </a>
+    <a href="#" class="article-item fade-in">
+      <span class="article-category">Music × Life</span>
+      <span class="article-title">What Practicing Piano Taught Me About Shipping Products</span>
+      <span class="article-date">Coming Soon</span>
+    </a>
+  </div>
+</section>
+
+<!-- ── My World ── -->
+<section id="world">
+  <div class="section-header">
+    <div>
+      <div class="section-number">03</div>
+      <h2 class="section-title">My World</h2>
+    </div>
+    <span class="section-subtitle">The interests that shape how I think</span>
+  </div>
+  <div class="interests-grid fade-in">
+    <div class="interest-cell"><span class="interest-icon">♟</span><h4>Chess</h4><p>Strategy, pattern recognition, and thinking multiple moves ahead.</p></div>
+    <div class="interest-cell"><span class="interest-icon">🃏</span><h4>Poker</h4><p>Expected value, risk management, and decisions with incomplete information.</p></div>
+    <div class="interest-cell"><span class="interest-icon">🎹</span><h4>Piano & Music</h4><p>Discipline, creativity, and the art of deliberate practice.</p></div>
+    <div class="interest-cell"><span class="interest-icon">🏀</span><h4>Basketball</h4><p>Teamwork, analytics, and performing under pressure.</p></div>
+    <div class="interest-cell"><span class="interest-icon">📈</span><h4>Trading & Finance</h4><p>Markets, behavioral economics, and quantitative thinking.</p></div>
+    <div class="interest-cell"><span class="interest-icon">🤖</span><h4>AI & Machine Learning</h4><p>The technology that's reshaping every product and every industry.</p></div>
+    <div class="interest-cell"><span class="interest-icon">🖥</span><h4>Computers & CS</h4><p>Systems thinking, architecture, and understanding what's under the hood.</p></div>
+    <div class="interest-cell"><span class="interest-icon">∑</span><h4>Math</h4><p>First principles, proofs, and the language underneath everything.</p></div>
+  </div>
+</section>
+
+<!-- ── About ── -->
+<section id="about">
+  <div class="section-header">
+    <div>
+      <div class="section-number">04</div>
+      <h2 class="section-title">About</h2>
+    </div>
+  </div>
+  <div class="about-content">
+    <div class="about-text">
+      <p>I'm a <strong>product manager</strong> who believes the best products come from people who think broadly and build deeply. My background spans technology, finance, and a lifelong curiosity about how things work — from algorithms to musical harmony to market microstructure.</p>
+      <br>
+      <p>I use this portfolio to <strong>build in public</strong> — shipping projects, writing about ideas, and documenting what I learn along the way. Every project here is framed through a product lens: who's the user, what's the problem, and how do we measure success?</p>
+      <br>
+      <p>When I'm not building products, you'll find me playing chess, studying poker strategy, practicing piano, watching basketball, or going down some rabbit hole about machine learning or financial markets.</p>
+    </div>
+    <div class="about-details">
+      <div class="about-detail-item"><label>Focus</label><span>Product Management</span></div>
+      <div class="about-detail-item"><label>Interests</label><span>AI, Chess, Poker, Music, Trading</span></div>
+      <div class="about-detail-item"><label>Currently</label><span>Building AI agents & writing</span></div>
+      <div class="about-detail-item"><label>Location</label><span>India</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Contact ── -->
+<section id="contact" class="contact">
+  <h2>Let's <em>connect.</em></h2>
+  <p>Open to PM roles, collaborations, and interesting conversations.</p>
+  <div class="contact-links">
+    <a href="mailto:your@email.com" class="contact-link">Email</a>
+    <a href="https://linkedin.com/in/yourprofile" class="contact-link">LinkedIn</a>
+    <a href="https://github.com/yourusername" class="contact-link">GitHub</a>
+    <a href="https://twitter.com/yourhandle" class="contact-link">Twitter / X</a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Your Name. Built with curiosity.</span>
+  <span>Hosted on GitHub Pages</span>
+</footer>
+
+<!-- ── Gravity Simulator ── -->
+<script>
+(function() {
+  const canvas = document.getElementById('gravityCanvas');
+  const ctx = canvas.getContext('2d');
+  const bodyCountEl = document.getElementById('bodyCount');
+  const energyEl = document.getElementById('energyStat');
+  const massBar = document.getElementById('massBar');
+  const massLabel = document.getElementById('massLabel');
+
+  let W, H, dpr;
+  let bodies = [];
+  let showTrails = true;
+  let showGlow = false;
+  let dragging = false;
+  let dragStart = null;
+  let dragCurrent = null;
+  let nextMass = 800;
+
+  const G = 0.4;
+  const DAMPING = 0.9998;
+  const MAX_TRAIL = 80;
+  const MIN_MASS = 50;
+  const MAX_MASS = 12000;
+  const COLORS = [
+    '#e8c547', '#c75a5a', '#5ac77a', '#5a8ec7',
+    '#9a6ec7', '#e8a347', '#47c7c7', '#e85a8e',
+    '#7ae85a', '#c7c75a'
+  ];
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    dpr = window.devicePixelRatio || 1;
+    W = rect.width;
+    H = rect.height;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+
+  class Body {
+    constructor(x, y, vx, vy, mass) {
+      this.x = x; this.y = y;
+      this.vx = vx; this.vy = vy;
+      this.mass = mass;
+      this.radius = Math.pow(mass, 0.38) * 0.6;
+      this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      this.trail = [];
+      this.alive = true;
+      this.age = 0;
+    }
+  }
+
+  function addBody(x, y, vx, vy, mass) {
+    bodies.push(new Body(x, y, vx || 0, vy || 0, mass || nextMass));
+  }
+
+  function clearBodies() { bodies = []; }
+
+  function toggleTrails() {
+    showTrails = !showTrails;
+    document.getElementById('btnTrails').classList.toggle('active', showTrails);
+    if (!showTrails) bodies.forEach(b => b.trail = []);
+  }
+
+  function toggleGlow() {
+    showGlow = !showGlow;
+    document.getElementById('btnGlow').classList.toggle('active', showGlow);
+  }
+
+  function updateMassUI() {
+    const pct = ((nextMass - MIN_MASS) / (MAX_MASS - MIN_MASS)) * 100;
+    massBar.style.width = pct + '%';
+    massLabel.textContent = 'Mass: ' + nextMass;
+  }
+
+  function loadPreset() {
+    clearBodies();
+    const cx = W / 2, cy = H / 2;
+    addBody(cx, cy, 0, 0, 8000);
+    const orbits = [
+      { dist: 80, speed: 2.8, mass: 150 },
+      { dist: 130, speed: 2.2, mass: 350 },
+      { dist: 195, speed: 1.75, mass: 280 },
+      { dist: 270, speed: 1.4, mass: 500 },
+    ];
+    orbits.forEach(o => {
+      const a = Math.random() * Math.PI * 2;
+      addBody(
+        cx + Math.cos(a) * o.dist, cy + Math.sin(a) * o.dist,
+        -Math.sin(a) * o.speed, Math.cos(a) * o.speed, o.mass
+      );
+    });
+    for (let i = 0; i < 15; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const d = 100 + Math.random() * 220;
+      const s = 1.3 + Math.random() * 1.4;
+      addBody(
+        cx + Math.cos(a) * d, cy + Math.sin(a) * d,
+        -Math.sin(a) * s + (Math.random() - 0.5) * 0.4,
+        Math.cos(a) * s + (Math.random() - 0.5) * 0.4,
+        15 + Math.random() * 50
+      );
+    }
+  }
+
+  function physics() {
+    const len = bodies.length;
+    for (let i = 0; i < len; i++) {
+      if (!bodies[i].alive) continue;
+      for (let j = i + 1; j < len; j++) {
+        if (!bodies[j].alive) continue;
+        const a = bodies[i], b = bodies[j];
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const distSq = dx * dx + dy * dy + 50;
+        const dist = Math.sqrt(distSq);
+        const force = G * a.mass * b.mass / distSq;
+        const fx = force * dx / dist, fy = force * dy / dist;
+        a.vx += fx / a.mass; a.vy += fy / a.mass;
+        b.vx -= fx / b.mass; b.vy -= fy / b.mass;
+
+        if (dist < a.radius + b.radius) {
+          const big = a.mass >= b.mass ? a : b;
+          const sm = a.mass >= b.mass ? b : a;
+          big.vx = (big.vx * big.mass + sm.vx * sm.mass) / (big.mass + sm.mass);
+          big.vy = (big.vy * big.mass + sm.vy * sm.mass) / (big.mass + sm.mass);
+          big.mass += sm.mass;
+          big.radius = Math.pow(big.mass, 0.38) * 0.6;
+          sm.alive = false;
+        }
+      }
+    }
+    for (let i = len - 1; i >= 0; i--) {
+      const b = bodies[i];
+      if (!b.alive) { bodies.splice(i, 1); continue; }
+      b.vx *= DAMPING; b.vy *= DAMPING;
+      b.x += b.vx; b.y += b.vy;
+      b.age++;
+      if (showTrails) {
+        b.trail.push({ x: b.x, y: b.y });
+        if (b.trail.length > MAX_TRAIL) b.trail.shift();
+      }
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // subtle grid
+    ctx.strokeStyle = '#ffffff06';
+    ctx.lineWidth = 0.5;
+    const gridSize = 60;
+    for (let x = 0; x < W; x += gridSize) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += gridSize) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+
+    // gravitational field lines between nearby bodies (subtle)
+    if (bodies.length > 1 && bodies.length <= 30) {
+      for (let i = 0; i < bodies.length; i++) {
+        for (let j = i + 1; j < bodies.length; j++) {
+          const a = bodies[i], b = bodies[j];
+          const dx = b.x - a.x, dy = b.y - a.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 300) {
+            const alpha = Math.max(0.02, Math.min(0.12, (a.mass + b.mass) / 15000 * (1 - dist / 300)));
+            ctx.strokeStyle = `rgba(232,197,71,${alpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          }
+        }
+      }
+    }
+
+    // trails
+    if (showTrails) {
+      bodies.forEach(b => {
+        if (b.trail.length < 2) return;
+        for (let i = 1; i < b.trail.length; i++) {
+          const alpha = (i / b.trail.length) * 0.35;
+          ctx.strokeStyle = b.color;
+          ctx.globalAlpha = alpha;
+          ctx.lineWidth = Math.max(0.5, b.radius * 0.25);
+          ctx.beginPath();
+          ctx.moveTo(b.trail[i - 1].x, b.trail[i - 1].y);
+          ctx.lineTo(b.trail[i].x, b.trail[i].y);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+      });
+    }
+
+    // bodies
+    bodies.forEach(b => {
+      if (showGlow) {
+        const gs = b.radius * 6;
+        const grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, gs);
+        grad.addColorStop(0, b.color + '25');
+        grad.addColorStop(0.5, b.color + '08');
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.beginPath(); ctx.arc(b.x, b.y, gs, 0, Math.PI * 2); ctx.fill();
+      }
+
+      // outer ring for large bodies
+      if (b.mass > 2000) {
+        ctx.strokeStyle = b.color + '30';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(b.x, b.y, b.radius + 4, 0, Math.PI * 2); ctx.stroke();
+      }
+
+      const cg = ctx.createRadialGradient(
+        b.x - b.radius * 0.3, b.y - b.radius * 0.3, 0,
+        b.x, b.y, b.radius
+      );
+      cg.addColorStop(0, '#ffffff');
+      cg.addColorStop(0.25, b.color);
+      cg.addColorStop(1, b.color + '60');
+      ctx.fillStyle = cg;
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2); ctx.fill();
+    });
+
+    // drag preview
+    if (dragging && dragStart && dragCurrent) {
+      const dx = dragCurrent.x - dragStart.x, dy = dragCurrent.y - dragStart.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      // velocity preview arrow
+      ctx.strokeStyle = '#e8c54760';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 4]);
+      ctx.beginPath(); ctx.moveTo(dragStart.x, dragStart.y); ctx.lineTo(dragCurrent.x, dragCurrent.y); ctx.stroke();
+      ctx.setLineDash([]);
+
+      if (dist > 10) {
+        const angle = Math.atan2(dy, dx);
+        ctx.fillStyle = '#e8c54760';
+        ctx.beginPath();
+        ctx.moveTo(dragCurrent.x, dragCurrent.y);
+        ctx.lineTo(dragCurrent.x - 9 * Math.cos(angle - 0.4), dragCurrent.y - 9 * Math.sin(angle - 0.4));
+        ctx.lineTo(dragCurrent.x - 9 * Math.cos(angle + 0.4), dragCurrent.y - 9 * Math.sin(angle + 0.4));
+        ctx.fill();
+      }
+
+      // preview body
+      const pr = Math.pow(nextMass, 0.38) * 0.6;
+      ctx.fillStyle = '#e8c54730';
+      ctx.beginPath(); ctx.arc(dragStart.x, dragStart.y, pr, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#e8c54750';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(dragStart.x, dragStart.y, pr, 0, Math.PI * 2); ctx.stroke();
+
+      // velocity readout
+      const vel = (dist * 0.04).toFixed(1);
+      ctx.fillStyle = '#e8c54790';
+      ctx.font = '10px "JetBrains Mono", monospace';
+      ctx.fillText(`v: ${vel}`, dragCurrent.x + 12, dragCurrent.y - 8);
+    }
+
+    // hud
+    bodyCountEl.textContent = `Bodies: ${bodies.length}`;
+    let ke = 0;
+    bodies.forEach(b => ke += 0.5 * b.mass * (b.vx * b.vx + b.vy * b.vy));
+    energyEl.textContent = `Energy: ${Math.floor(ke).toLocaleString()}`;
+  }
+
+  function loop() { physics(); draw(); requestAnimationFrame(loop); }
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] || e.changedTouches[0] : e;
+    return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+  }
+
+  canvas.addEventListener('mousedown', e => { dragging = true; dragStart = getPos(e); dragCurrent = { ...dragStart }; });
+  canvas.addEventListener('mousemove', e => { if (dragging) dragCurrent = getPos(e); });
+  canvas.addEventListener('mouseup', e => {
+    if (!dragging || !dragStart) return;
+    const end = getPos(e);
+    addBody(dragStart.x, dragStart.y, (end.x - dragStart.x) * 0.04, (end.y - dragStart.y) * 0.04, nextMass);
+    dragging = false; dragStart = null; dragCurrent = null;
+  });
+
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); dragging = true; dragStart = getPos(e); dragCurrent = { ...dragStart }; }, { passive: false });
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); if (dragging) dragCurrent = getPos(e); }, { passive: false });
+  canvas.addEventListener('touchend', e => {
+    if (!dragging || !dragStart) return;
+    const end = dragCurrent || dragStart;
+    addBody(dragStart.x, dragStart.y, (end.x - dragStart.x) * 0.04, (end.y - dragStart.y) * 0.04, nextMass);
+    dragging = false; dragStart = null; dragCurrent = null;
+  });
+
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    nextMass = Math.max(MIN_MASS, Math.min(MAX_MASS, nextMass + (e.deltaY > 0 ? -150 : 150)));
+    updateMassUI();
+  }, { passive: false });
+
+  window.toggleTrails = toggleTrails;
+  window.toggleGlow = toggleGlow;
+  window.loadPreset = loadPreset;
+  window.clearBodies = clearBodies;
+
+  loadPreset();
+  loop();
+})();
+</script>
+
+<!-- ── Scroll animation ── -->
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
